@@ -1,0 +1,58 @@
+<div class="register-container">
+	<div class="register-box">
+	  <h2 class="fw-bold text-center">Regístrate</h2>
+	  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+		<mat-form-field appearance="outline" class="full-width">
+		  <mat-label>Nombre</mat-label>
+		  <input matInput formControlName="firstName" type="text" required />
+		  @if(controlHasError('firstName', 'required')){
+			<mat-error>El nombre es obligatorio</mat-error>
+		  }
+		</mat-form-field>
+  
+		<mat-form-field appearance="outline" class="full-width">
+		  <mat-label>Apellido</mat-label>
+		  <input matInput formControlName="lastName" type="text" required />
+		  @if(controlHasError('lastName', 'required')){
+			<mat-error>El apellido es obligatorio</mat-error>
+		  }		  
+		</mat-form-field>
+  
+		<mat-form-field appearance="outline" class="full-width">
+		  <mat-label>Correo electrónico</mat-label>
+		  <input matInput formControlName="email" type="email" required />
+		  @if(controlHasError('email', 'required')){
+			<mat-error>El correo electrónico es obligatorio</mat-error>
+		  }	
+		  
+		  @if(controlHasError('email', 'email')){
+			<mat-error>Por favor ingrese un correo electrónico válido</mat-error>
+		  }			  
+		</mat-form-field>
+  
+		<mat-form-field appearance="outline" class="full-width">
+		  <mat-label>Contraseña</mat-label>
+		  <input matInput formControlName="password" type="password" required />
+		  @if(controlHasError('password', 'required')){
+			<mat-error>La contraseña es obligatoria</mat-error>
+		  }	
+		</mat-form-field>
+  
+		<mat-form-field appearance="outline" class="full-width">
+		  <mat-label>Confirmar Contraseña</mat-label>
+		  <input matInput formControlName="confirmPassword" type="password" required />
+		  @if(controlHasError('confirmPassword', 'required')){
+			<mat-error>La confirmación de la contraseña es obligatoria</mat-error>
+		  }	
+		  
+		  @if(controlHasError('confirmPassword', 'passwordMismatch')){
+			<mat-error>Las contraseñas no coinciden</mat-error>
+		  }	
+		</mat-form-field>
+  
+		<button mat-raised-button color="primary" type="submit" [disabled]="!registerForm.valid" class="btn-login">Registrarse</button>
+	  </form>
+	  <p class="register-link">¿Ya tienes una cuenta? <a routerLink="/auth/sign-in">Inicia sesión aquí</a></p>
+	</div>
+  </div>
+  
