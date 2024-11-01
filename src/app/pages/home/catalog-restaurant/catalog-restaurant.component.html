@@ -1,0 +1,42 @@
+<div class="catalog-container">
+    <div class="sidebar">
+        <h3>Distritos</h3>
+        <ul>
+            <li (click)="filterByDistrict('Todos')" [class.selected]="selectedDistrict === 'Todos'">Todos</li>
+            @for (district of districts; track $index) {
+                <li (click)="filterByDistrict(district.name)" [class.selected]="selectedDistrict === district.name">{{ district.name }}</li>
+            } @empty {
+                <li>No hay distritos</li>
+            }            
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="result-count">
+            <p>{{ totalElements }} restaurantes encontrados</p>
+        </div>
+        <div class="card-grid">
+            @for (restaurant of restaurants; track $index) {
+                <div class="card-item">
+                    <mat-card class="restaurant-card">
+                        <!--<img mat-card-image [src]="getRandomImage()" alt="Imagen del Restaurante">-->
+                        <mat-card-header>
+                            <mat-card-title>{{ restaurant.name }}</mat-card-title>
+                            <mat-card-subtitle>{{ restaurant.address }}</mat-card-subtitle>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>Teléfono: {{ restaurant.phoneNumber }}</p>                          
+                            <p>Precio por persona: {{ restaurant.pricePerPerson | currency }}</p>                                                   
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button mat-raised-button class="reserve-button" (click)="navigateToReservationForm(restaurant.id)">Reservar</button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+            } @empty {
+                <p>No hay restaurantes</p>
+            }
+        </div>
+        <mat-paginator [length]="totalElements" [pageSize]="pageSize" [pageSizeOptions]="[9, 12, 24]" (page)="onPageChange($event)">
+        </mat-paginator>
+    </div>
+</div>
