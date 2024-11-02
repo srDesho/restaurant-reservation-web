@@ -1,0 +1,141 @@
+.main-container {
+    flex: 1;
+    padding: 2rem 1rem;
+    margin-top: 80px;
+    margin-bottom: 60px;
+}
+
+/* General toolbar styles */
+mat-toolbar {
+    background-color: #1e88e5; /* Color primario */
+    color: white;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para el efecto elevado */
+    flex-wrap: nowrap; /* No permite que los elementos se ajusten en pantallas pequeñas */
+    justify-content: space-between; /* Asegura que los elementos se distribuyan adecuadamente */
+}
+
+/* Toolbar title */
+mat-toolbar span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    white-space: nowrap; /* Evita el desbordamiento del texto */
+}
+
+/* Navigation buttons */
+mat-toolbar button {
+    color: white;
+    font-size: 1rem;
+    margin: 8px 16px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 4px; /* Bordes redondeados */
+    white-space: nowrap; /* Asegura que el texto no se quiebre */
+}
+
+mat-toolbar button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Efecto hover */
+}
+
+mat-toolbar button.active {
+    background-color: #ffa726; /* Nuevo color para la opción seleccionada */
+    font-weight: bold;
+}
+
+/* Spacer to push items to the end */
+.spacer {
+    flex: 1 1 auto;
+}
+
+/* User menu styles */
+mat-menu {
+    background-color: #ffffff; /* Fondo blanco para el menú */
+    color: #333333; /* Color del texto del menú */
+}
+
+mat-menu button {
+    display: flex;
+    align-items: center;
+}
+
+mat-menu button mat-icon {
+    margin-right: 8px; /* Separación entre el icono y el texto */
+}
+
+/* Register button */
+mat-toolbar button.mat-raised-button {
+    margin-left: 16px;
+}
+
+mat-toolbar button.mat-raised-button.primary {
+    background-color: #4caf50; /* Color del botón de registro */
+    color: white;
+}
+
+mat-toolbar button.mat-raised-button.primary:hover {
+    background-color: #45a049; /* Efecto hover */
+}
+
+/* Footer styles */
+.footer {
+    background-color: #333; /* Color de fondo sólido */
+    color: #fff;
+    padding: 0.5rem;
+    text-align: center;
+    width: 100%;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    bottom: 0;
+    z-index: 1000;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    mat-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        background-color: #1e88e5; /* Asegura que el fondo cubra todos los elementos */
+        padding: 16px; /* Aumenta el padding para asegurar que todos los elementos sean visibles */
+        min-height: 200px; /* Asegura que la altura sea suficiente para mostrar todos los elementos */
+    }
+
+    mat-toolbar button {
+        width: 100%;
+        text-align: left;
+        margin: 4px 0;
+    }
+
+    .spacer {
+        display: none;
+    }
+
+    mat-toolbar span {
+        margin-bottom: 8px; /* Agrega espacio entre el título y los botones en pantallas pequeñas */
+    }
+}

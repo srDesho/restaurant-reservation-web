@@ -1,0 +1,37 @@
+<mat-toolbar>
+    <span>EDteamReserve</span>
+    <button mat-button routerLink="/pages/restaurants" class="ms-3" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        Restaurantes
+    </button>
+    <button mat-button routerLink="/pages/reservation/history" class="ms-3" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        Reservaciones
+    </button>
+    <span class="spacer"></span>
+    @if (user) {
+        <button mat-button [matMenuTriggerFor]="userMenu">
+            <mat-icon>account_circle</mat-icon> {{ user.firstName }}
+        </button>
+        <mat-menu #userMenu>
+            <button mat-menu-item (click)="logout()">
+                <mat-icon>logout</mat-icon> Cerrar sesión
+            </button>
+        </mat-menu>
+    } @else {
+        <button mat-button routerLink="/auth/sign-in" class="ms-3">
+            Iniciar sesión
+        </button>
+        <button mat-raised-button color="primary" routerLink="/auth/sign-up" class="ms-3">
+            Registrarme
+        </button>
+    }
+</mat-toolbar>
+
+<div class="main-container">
+    <router-outlet/>
+</div>
+
+<footer class="footer">
+    <div class="footer-content">
+        <p>&copy; 2024 <a href="https://hampcode.com">HampCode</a> .All rights reserved.</p>
+    </div>
+</footer>
