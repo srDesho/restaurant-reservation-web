@@ -1,0 +1,26 @@
+<div class="payment-confirmation-container">
+	<div class="confirmation-message">
+	  <mat-icon class="confirmation-icon">payment</mat-icon>
+	  <h1>Pago realizado</h1>    
+	</div>
+  
+	<div class="order-details">
+	  
+	  <p><strong>Cliente:</strong> {{ user?.firstName }} {{ user?.lastName }}</p>
+	  <p><strong>Correo Electrónico:</strong> {{ user?.email }}</p>
+	  <p><strong>Restaurante:</strong> {{ reservation.restaurantName }}</p>
+	  <p><strong>Fecha de la Reserva:</strong> {{ reservation.reservationDate}}</p>
+	  <p><strong>Número de Personas:</strong> {{ reservation.numberOfPeople }}</p>
+	  
+	  <p><strong>Información Adicional:</strong> {{ reservation.additionalInfo }}</p>
+	  <p><strong>Total a Pagar:</strong> {{ reservation.totalAmount }}</p>
+	</div>
+  
+	<div class="action-buttons">
+	  <div id="paypal-button-container"></div>
+	  
+	  <button mat-raised-button color="warn" routerLink="/pages/reservation/history">Ver reservas</button>
+	  
+	</div>
+  </div>
+  

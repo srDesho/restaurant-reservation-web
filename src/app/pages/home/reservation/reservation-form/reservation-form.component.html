@@ -1,0 +1,83 @@
+@if (restaurant) {
+    <div class="reservation-page">
+        <div class="breadcrumbs">
+            <a routerLink="/pages/restaurants">Restaurantes</a> &gt;
+            <span>Reservar en {{ restaurant.name }}</span>
+        </div>
+       
+        <div class="reservation-container">
+            <div class="restaurant-info">
+                <p>Restaurante: {{ restaurant.name }}</p>
+                <p>Dirección: {{ restaurant.address }}</p>
+                <p>Teléfono: {{ restaurant.phoneNumber }}</p>
+                <p>Precio por persona: {{ restaurant.pricePerPerson | currency }}</p>
+            </div>
+        
+            @if(!showPaypalButton){
+                <!-- Muestra el formulario de reserva solo si NO se está mostrando el botón de PayPal -->
+                <div class="reservation-form">
+                    <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+                        <mat-form-field>
+                            <mat-label>Fecha de la reserva</mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="reservationDate" [min]="minDate" required>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+            
+                        <mat-form-field>
+                            <mat-label>Hora de la reserva</mat-label>
+                            <mat-select formControlName="reservationTime" required>
+                                <mat-option *ngFor="let time of availableTimes" [value]="time">{{ time }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+            
+                        <mat-form-field>
+                            <mat-label>Número de personas</mat-label>
+                            <input matInput type="number" formControlName="numberOfPeople" required>
+                        </mat-form-field>
+            
+                        <mat-form-field>
+                            <mat-label>Información adicional</mat-label>
+                            <textarea matInput formControlName="additionalInfo"></textarea>
+                        </mat-form-field>
+            
+                        <p class="total-amount">Total a pagar: <span>{{ totalAmount() | currency }}</span></p>
+            
+                        <div class="button-group">
+                            <button mat-raised-button color="primary" type="submit" [disabled]="!reservationForm.valid">Reservar</button>
+                            <button *ngIf="!reservationConfirmed" mat-raised-button color="warn" type="button" (click)="onCancel()">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            }@else {
+                <!-- Sección de confirmación de pago con PayPal -->
+                <div class="payment-confirmation-container">
+                    <div class="confirmation-message">
+                        <mat-icon class="confirmation-icon">payment</mat-icon>
+                        <h1>Confirmar Pago</h1>
+                        <p>Revisa los detalles de tu reserva antes de proceder con el pago.</p>
+                    </div>
+            
+                    <div class="order-details">
+                        <p><strong>Cliente:</strong> {{ user?.firstName }} {{ user?.lastName }}</p>
+                        <p><strong>Correo Electrónico:</strong> {{ user?.email }}</p>
+                        <p><strong>Restaurante:</strong> {{ reservation.restaurantName }}</p>
+                        <p><strong>Fecha de la Reserva:</strong> {{ reservation.reservationDate }}</p>
+                        <p><strong>Número de Personas:</strong> {{ reservation.numberOfPeople }}</p>              
+                        <p><strong>Información Adicional:</strong> {{ reservation.additionalInfo }}</p>
+                        <p><strong>Total a Pagar:</strong> {{ reservation.totalAmount | currency }}</p>
+                    </div>
+            
+					<div class="action-buttons">
+                        <button mat-raised-button color="primary" (click)="onPayWithPayPal()">Pagar con PayPal</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}@else {
+    <div class="not-found-container">
+        <h2>Restaurante no encontrado</h2>
+        <p>El restaurante solicitado no fue encontrado. Por favor, <a routerLink="/pages/restaurants">regrese al catálogo</a>.</p>
+    </div>
+}
