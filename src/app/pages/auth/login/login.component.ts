@@ -22,7 +22,8 @@ import { AuthRequest } from '../../../shared/models/request/auth-request.model';
     MatInputModule,    
     MatButtonModule,
     MatSnackBarModule,
-    RouterLink    
+    RouterLink,
+    RouterOutlet 
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'

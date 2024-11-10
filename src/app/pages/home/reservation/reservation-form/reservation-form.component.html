@@ -4,6 +4,10 @@
             <a routerLink="/pages/restaurants">Restaurantes</a> &gt;
             <span>Reservar en {{ restaurant.name }}</span>
         </div>
+
+        <div class="container">
+            <router-outlet/> <!-- Donde se mostrarán los componentes anidados como el login -->
+        </div>
        
         <div class="reservation-container">
             <div class="restaurant-info">
