@@ -7,6 +7,11 @@ import { CheckoutService } from '../../../../shared/services/checkout.service';
 import { ReservationResponse } from '../../../../shared/models/response/reservation-response.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
+/**
+ * Esta clase es responsable de mostrar la confirmación de una reserva realizada.
+ * Se encarga de cargar los detalles de la reserva a través de un servicio y ofrece
+ * opciones al usuario para continuar navegando o revisar los detalles de la reserva.
+ */
 @Component({
   selector: 'app-reservation-confirmation',
   standalone: true,
@@ -32,6 +37,11 @@ export class ReservationConfirmationComponent {
   
   loading = false;
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Recupera el ID de la reserva almacenado en el localStorage, si existe, y carga los detalles
+   * de la reserva correspondiente.
+   */
   ngOnInit(): void {    
     const reservationId = localStorage.getItem('reservationId');   
 
@@ -41,6 +51,10 @@ export class ReservationConfirmationComponent {
     }
   }
 
+  /**
+   * Carga los detalles de una reserva a partir de su ID.
+   * @param reservationId ID de la reserva a cargar.
+   */
   loadReservationDetails(reservationId: number): void {
     this.reservationService.getReservationById(reservationId).subscribe({
       next: (reservation) => {
@@ -50,19 +64,27 @@ export class ReservationConfirmationComponent {
     });
   }
 
+  /**
+   * Getter para obtener el usuario actualmente autenticado.
+   */
   get user() {
     return this.authService.getCurrentUser();
   }
 
+  /**
+   * Navega al catálogo de restaurantes para continuar navegando.
+   */
   onContinueShopping(): void {
     this.router.navigate(['/pages/restaurants']);
   }
 
+  /**
+   * Muestra un mensaje tipo SnackBar en la parte inferior de la pantalla.
+   * @param message Mensaje a mostrar.
+   */
   private showSnackBar(message: string): void {
     this.snackBar.open(message, 'Cerrar', {
       duration: 3000,
     });
   }
- 
-
 }

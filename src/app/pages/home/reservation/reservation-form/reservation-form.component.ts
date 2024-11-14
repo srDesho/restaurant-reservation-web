@@ -18,6 +18,12 @@ import { ReservationResponse } from '../../../../shared/models/response/reservat
 import { CheckoutService } from '../../../../shared/services/checkout.service';
 
 
+/**
+ * Esta clase gestiona el formulario de creación de reservas en un restaurante.
+ * Permite al usuario seleccionar fecha, hora, número de personas y enviar la reserva.
+ * También maneja la integración con PayPal para pagos, mostrando el botón de pago
+ * después de confirmar la reserva.
+ */
 @Component({
   selector: 'app-reservation-form',
   standalone: true,
@@ -54,24 +60,22 @@ export class ReservationFormComponent implements OnInit {
     '18:00', '18:30', '19:00', '19:30', '20:00'
   ];
 
-  //Uso de !  Cuando estás absolutamente seguro de que un valor no es null ni undefined
-  //Uso de ? Cuando estás trabajando con objetos o valores que pueden ser null o undefined,
+  // Uso de ! Cuando estás absolutamente seguro de que un valor no es null ni undefined
+  // Uso de ? Cuando estás trabajando con objetos o valores que pueden ser null o undefined,
   restaurantId!: number;
   reservationId!: number;
   restaurant!: RestaurantResponse;
   reservation!: ReservationResponse;
 
-
   numberOfPeople = signal(1);  // Inicializamos con 1 persona por defecto
   totalAmount = computed(() => this.numberOfPeople() * this.restaurant.pricePerPerson);
-  minDate: Date=new Date();
+  minDate: Date = new Date();
 
   loading = false;
   showPaypalButton = false; 
   reservationConfirmed = false;
 
-
-  constructor(){
+  constructor() {
     this.reservationForm = this.fb.group({
       reservationDate: ['', Validators.required],
       reservationTime: ['', Validators.required],      
@@ -84,7 +88,6 @@ export class ReservationFormComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.restaurantId = +params['restaurantId'] || 0;
       this.loadRestaurantData();
-     
     });   
 
     // Escuchar cambios en el número de personas y actualizar el signal
@@ -96,36 +99,28 @@ export class ReservationFormComponent implements OnInit {
     const payerId = this.route.snapshot.queryParamMap.get('PayerID');
 
     if (token && payerId) {
-          this.loading = true;
+      this.loading = true;
 
-          this.checkoutService.capturePaypalOrder(token)
-            .subscribe(response => {
-              if (response.completed) {               
-                //this.router.navigate(['/pages/reservation/confirmation', response.reservationId]);
-                this.router.navigate(['/pages/reservation/confirmation']);
-              }
-    });
-  }
-
-
+      this.checkoutService.capturePaypalOrder(token).subscribe(response => {
+        if (response.completed) {               
+          this.router.navigate(['/pages/reservation/confirmation']);
+        }
+      });
+    }
   }
 
   get user() {
     return this.authService.getCurrentUser();
   }
 
-
-  
   loadRestaurantData(): void {
     this.restaurantService.getRestaurantById(this.restaurantId).subscribe({
       next: (restaurant) => {
         this.restaurant = restaurant;
-      
       },
       error: () => this.snackBar.open('Failed to load restaurant data.', 'Close', { duration: 3000 })
     });
   }
-
 
   onSubmit(): void {
     if (this.reservationForm.valid) {
@@ -136,16 +131,14 @@ export class ReservationFormComponent implements OnInit {
         additionalInfo: this.reservationForm.get('additionalInfo')!.value
       };
 
-
       this.reservationService.createReservation(reservationRequest).subscribe({
         next: (response) => {
           this.showSnackBar('Reservation created successfully!');
-          // Aquí puedes hacer la redirección o mostrar el botón de PayPal
-          this.showPaypalButton = true; // Asegúrate de declarar `showPaypalButton` en tu clase
+          this.showPaypalButton = true; // Muestra el botón de PayPal
           this.reservationConfirmed = true;
           this.reservation = response; // Guarda la respuesta para usarla en el pago
         },
-        error: () => this.showSnackBar('Failed to load reservation details!')
+        error: () => this.showSnackBar('Failed to create reservation!')
       });
     }
   }
@@ -154,47 +147,45 @@ export class ReservationFormComponent implements OnInit {
     this.router.navigate(['/pages/restaurants']);
   }
 
-  loadReservationDetails(): void {
-    this.reservationService.getReservationById(this.reservationId).subscribe({
-      next: (reservation) => this.reservation = reservation,
-      error: () => this.showSnackBar('Failed to load reservation details!')
-    });
-  }  
-
-  onPayWithPayPal():void{
+  onPayWithPayPal(): void {
     this.loading = true;
-     
-    this.checkoutService.createPaypalOrder(this.reservation.id)
-    .subscribe(response => {
-      localStorage.setItem('reservationId',this.reservation.id.toString());  
+
+    this.checkoutService.createPaypalOrder(this.reservation.id).subscribe(response => {
+      localStorage.setItem('reservationId', this.reservation.id.toString());  
       window.location.href = response.paypalUrl;    
-    })
+    });
   }
 
-   //TODO: implementar luego en un util porque se utiliza en varios componentes
-   private showSnackBar(message: string): void {
+  /**
+   * Muestra un mensaje tipo SnackBar en la parte inferior de la pantalla.
+   * @param message Mensaje a mostrar.
+   */
+  private showSnackBar(message: string): void {
     this.snackBar.open(message, 'Cerrar', {
       duration: 3000,
     });
   }
 
+  /**
+   * Combina la fecha y hora seleccionadas en el formulario en una cadena ISO.
+   * @param date Fecha seleccionada.
+   * @param time Hora seleccionada.
+   * @returns Fecha y hora combinadas en formato ISO.
+   */
   private combineDateAndTime(date: Date, time: string): string {
-      const [hours, minutes] = time.split(':');
-      const combinedDateTime = new Date(date);
+    const [hours, minutes] = time.split(':');
+    const combinedDateTime = new Date(date);
 
-      // Ajustar las horas y minutos locales
-      combinedDateTime.setHours(+hours, +minutes, 0, 0);
+    // Ajustar las horas y minutos locales
+    combinedDateTime.setHours(+hours, +minutes, 0, 0);
 
-      // Obtener el desplazamiento de la zona horaria local en minutos
-      const timezoneOffset = combinedDateTime.getTimezoneOffset();
+    // Obtener el desplazamiento de la zona horaria local en minutos
+    const timezoneOffset = combinedDateTime.getTimezoneOffset();
 
-      // Ajustar la fecha y hora según el desplazamiento de la zona horaria
-      combinedDateTime.setMinutes(combinedDateTime.getMinutes() - timezoneOffset);
+    // Ajustar la fecha y hora según el desplazamiento de la zona horaria
+    combinedDateTime.setMinutes(combinedDateTime.getMinutes() - timezoneOffset);
 
-      // Convertir la fecha y hora ajustada a ISO string y retornar
-      return combinedDateTime.toISOString();
+    // Convertir la fecha y hora ajustada a ISO string y retornar
+    return combinedDateTime.toISOString();
   }
-
-
-
 }
